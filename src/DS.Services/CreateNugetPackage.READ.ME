@@ -1,0 +1,12 @@
+Set the Soltion Configuration to Release
+
+In Project Properties, increment the package version
+
+In Solution Explorer right click the project DS.Services > Pack
+
+Grab the path to the .nupkg file from the build output.
+	Successfully created package 'D:\GitHub\DS.Services\src\DS.Services\bin\Release\DS.Services.1.0.1.nupkg'.
+
+In the package Manager Console run this:
+
+nuget add D:\GitHub\DS.Services\src\DS.Services\bin\Release\DS.Services.1.0.1.nupkg -source D:\GitHub\DS.Nuget
