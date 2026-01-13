@@ -10,6 +10,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  versionNo: $(MajorVersion).$(MinorVersion).$(PatchVersion)
 
 steps:
 - task: NuGetToolInstaller@1
@@ -38,10 +39,11 @@ steps:
     packagesToPack: '**/*.csproj'
     packDirectory: '$(Build.ArtifactStagingDirectory)'
     #versioningScheme: 'byBuildNumber' # Or use 'off' and define in .csproj
-    versioningScheme: 'byPrereleaseNumber'
-    majorVersion: $(MajorVersion)
-    minorVersion: $(MinorVersion)
-    patchVersion: $(PatchVersion)
+    versioningScheme: byEnvVar
+    versionEnvVar: versionNo
+    #majorVersion: $(MajorVersion)
+    #minorVersion: $(MinorVersion)
+    #patchVersion: $(PatchVersion)
 
 
 # 2. Push to an internal Azure Artifacts feed
