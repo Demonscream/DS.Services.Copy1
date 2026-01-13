@@ -29,3 +29,20 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+# 1. Pack the project into a .nupkg file
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  inputs:
+    command: pack
+    packagesToPack: '**/*.csproj'
+    packDirectory: '$(Build.ArtifactStagingDirectory)'
+    versioningScheme: 'byBuildNumber' # Or use 'off' and define in .csproj
+
+# 2. Push to an internal Azure Artifacts feed
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet push'
+  inputs:
+    command: push
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    publishVstsFeed: 'TestProject1/TestFeed1' # Format: 'ProjectName/FeedName' or 'FeedGUID'
