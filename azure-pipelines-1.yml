@@ -49,7 +49,7 @@ steps:
     #patchVersion: $(PatchVersion)
 
 - script: |
-    echo "Current version: $(versionNumber)"
+    echo "Current version: $(MinorVersion)"
     
     echo "##vso[task.setvariable variable=MinorVersion;isOutput=true]$(MinorVersion)"
   name: SetVersion
