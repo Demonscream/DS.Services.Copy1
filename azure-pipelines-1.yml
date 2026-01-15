@@ -48,6 +48,20 @@ steps:
     #minorVersion: $(MinorVersion)
     #patchVersion: $(PatchVersion)
 
+- script: |
+    echo "Current version: $(versionNumber)"
+    # Save the overridden value for future runs
+    echo "##vso[task.setvariable variable=MinorVersion;isOutput=true]$(MinorVersion)"
+  name: SetVersion
+
+- script: |
+    echo "Updating variable in Azure DevOps..."
+    curl -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $(System.AccessToken)" \
+    -d '{"value": "$(MinorVersion)"}' \
+    https://dev.azure.com/<organization>/<project>/_apis/distributedtask/variablegroups/<variableGroupId>?api-version=6.0-preview.2
+  displayName: "Update Variable in Azure DevOps"
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 # 2. Push to an internal Azure Artifacts feed
 - task: DotNetCoreCLI@2
