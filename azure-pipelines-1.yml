@@ -41,28 +41,24 @@ steps:
     configuration: '$(buildConfiguration)'
 
 # 1. Pack the project into a .nupkg file
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet pack'
-  inputs:
-    command: pack
-    packagesToPack: '**/*.csproj'
-    packDirectory: '$(Build.ArtifactStagingDirectory)'
-    #versioningScheme: 'byBuildNumber' # Or use 'off' and define in .csproj
-    versioningScheme: byEnvVar
-    versionEnvVar: versionNo
-    #majorVersion: $(MajorVersion)
-    #minorVersion: $(MinorVersion)
-    #patchVersion: $(PatchVersion)
+#- task: DotNetCoreCLI@2
+#  displayName: 'dotnet pack'
+#  inputs:
+#    command: pack
+#    packagesToPack: '**/*.csproj'
+#    packDirectory: '$(Build.ArtifactStagingDirectory)'
+#    versioningScheme: byEnvVar
+#    versionEnvVar: versionNo
 
 
 
 # 2. Push to an internal Azure Artifacts feed
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet push'
-  inputs:
-    command: push
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    publishVstsFeed: 'TestProject1/TestFeed1' # Format: 'ProjectName/FeedName' or 'FeedGUID'
+#- task: DotNetCoreCLI@2
+#  displayName: 'dotnet push'
+#  inputs:
+#    command: push
+#    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+#    publishVstsFeed: 'TestProject1/TestFeed1' # Format: 'ProjectName/FeedName' or 'FeedGUID'
 
 
 - powershell: |
@@ -91,13 +87,13 @@ steps:
 
     echo "url = $url"
     
-    $definition = Invoke-RestMethod -Uri $url -Headers $headers -Method Get
+    ##$definition = Invoke-RestMethod -Uri $url -Headers $headers -Method Get
 
     # 2. Update the variable
-    $definition.variables.versionNumber.value = "$(versionNumber)"
+    ##$definition.variables.versionNumber.value = "$(versionNumber)"
 
     # 3. PATCH the full definition back
-    $body = $definition | ConvertTo-Json -Depth 20
-    Invoke-RestMethod -Uri $url -Headers $headers -Method Put -Body $body
+    ##$body = $definition | ConvertTo-Json -Depth 20
+    ##Invoke-RestMethod -Uri $url -Headers $headers -Method Put -Body $body
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
