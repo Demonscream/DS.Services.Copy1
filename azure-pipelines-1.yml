@@ -68,7 +68,7 @@ steps:
 - powershell: |
     $org = "$(System.CollectionUri)"
     $project = "$(System.TeamProject)"
-    $pipelineId = "$(System.DefinitionId)"
+    $defId = "$(System.DefinitionId)"
     $pat = "$(System.AccessToken)"
     $varName = "versionNumber"
     $newValue = "$(versionNumber)"
