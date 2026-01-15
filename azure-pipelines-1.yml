@@ -66,17 +66,7 @@ steps:
     $project = "$(System.TeamProject)"
     $defId = "$(System.DefinitionId)"
     $pat = "$(System.AccessToken)"
-    $varName = "versionNumber"
-    $newValue = "$(versionNumber)"
-
-    $body = @{
-        variables = @{
-            $varName = @{
-                value = $newValue
-            }
-        }
-    } | ConvertTo-Json -Depth 5
-
+    
     $headers = @{
         Authorization = "Bearer $pat"
         "Content-Type" = "application/json"
