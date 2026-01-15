@@ -95,6 +95,6 @@ steps:
 
     # 3. PATCH the full definition back
     $body = $definition | ConvertTo-Json -Depth 20
-    ##Invoke-RestMethod -Uri $url -Headers $headers -Method Put -Body $body
+    Invoke-RestMethod -Uri $url -Headers $headers -Method Put -Body $body
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
