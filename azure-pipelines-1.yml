@@ -17,6 +17,8 @@ variables:
   value: 'Any CPU'
 - name: buildConfiguration
   value: 'Release'
+- name: versionNo
+  value: $(versionNumber)
 
 
 steps:
@@ -47,7 +49,7 @@ steps:
     packDirectory: '$(Build.ArtifactStagingDirectory)'
     #versioningScheme: 'byBuildNumber' # Or use 'off' and define in .csproj
     versioningScheme: byEnvVar
-    versionEnvVar: $(versionNumber)
+    versionEnvVar: versionNo
     #majorVersion: $(MajorVersion)
     #minorVersion: $(MinorVersion)
     #patchVersion: $(PatchVersion)
