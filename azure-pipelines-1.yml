@@ -86,8 +86,15 @@ steps:
         "Content-Type" = "application/json"
     }
 
-    $url = "$org$project/_apis/build/definitions//$pipelineId/variables?api-version=7.1-preview.1"
+        # 1. GET the full definition
+    $url = "$orgUrl$project/_apis/build/definitions/$defId?api-version=7.1-preview.7"
+    $definition = Invoke-RestMethod -Uri $url -Headers $headers -Method Get
 
-    Invoke-RestMethod -Uri $url -Method Patch -Headers $headers -Body $body
+    # 2. Update the variable
+    $definition.variables.versionNumber.value = "$(versionNumber)"
+
+    # 3. PATCH the full definition back
+    $body = $definition | ConvertTo-Json -Depth 20
+    Invoke-RestMethod -Uri $url -Headers $headers -Method Put -Body $body
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
