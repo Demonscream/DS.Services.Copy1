@@ -88,8 +88,8 @@ steps:
     echo "defId = $defId"
     echo "url = $url"
     
-    ##$definition = Invoke-RestMethod -Uri $url -Headers $headers -Method Get
-
+    $definition = Invoke-RestMethod -Uri $url -Headers $headers -Method Get
+    echo "definition = $definition"
     # 2. Update the variable
     ##$definition.variables.versionNumber.value = "$(versionNumber)"
 
