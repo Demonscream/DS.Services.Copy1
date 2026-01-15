@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-- group: PackageVersions
+
 - name: solution
   value: '**/*.sln'
 - name: buildPlatform
@@ -47,23 +47,12 @@ steps:
     packDirectory: '$(Build.ArtifactStagingDirectory)'
     #versioningScheme: 'byBuildNumber' # Or use 'off' and define in .csproj
     versioningScheme: byEnvVar
-    versionEnvVar: versionNo
+    versionEnvVar: $(versionNumber)
     #majorVersion: $(MajorVersion)
     #minorVersion: $(MinorVersion)
     #patchVersion: $(PatchVersion)
 
-- script: |
-    echo "Current version: $(MinorVersion)"
-    
-    echo "##vso[task.setvariable variable=MinorVersion;isOutput=true]$(MinorVersion)"
-  name: SetVersion
 
-- script: |
-    echo "Updating variable in Azure DevOps..."
-    curl -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer $(System.AccessToken)" -d '{"value": "$(MinorVersion)"}' https://dev.azure.com/demonscream/TestProject1/_apis/distributedtask/variablegroups/<variableGroupId>?api-version=6.0-preview.2
-  displayName: "Update Variable in Azure DevOps"
-  env:
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 # 2. Push to an internal Azure Artifacts feed
 - task: DotNetCoreCLI@2
@@ -72,3 +61,31 @@ steps:
     command: push
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
     publishVstsFeed: 'TestProject1/TestFeed1' # Format: 'ProjectName/FeedName' or 'FeedGUID'
+
+
+- powershell: |
+    $org = "$(System.CollectionUri)"
+    $project = "$(System.TeamProject)"
+    $pipelineId = "$(System.DefinitionId)"
+    $pat = "$(System.AccessToken)"
+    $varName = "versionNumber"
+    $newValue = "$(versionNumber)"
+
+    $body = @{
+        variables = @{
+            $varName = @{
+                value = $newValue
+            }
+        }
+    } | ConvertTo-Json -Depth 5
+
+    $headers = @{
+        Authorization = "Bearer $pat"
+        "Content-Type" = "application/json"
+    }
+
+    $url = "$org$project/_apis/pipelines/$pipelineId/variables?api-version=7.1-preview.1"
+
+    Invoke-RestMethod -Uri $url -Method Patch -Headers $headers -Body $body
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
