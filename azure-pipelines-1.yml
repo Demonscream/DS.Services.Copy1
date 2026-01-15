@@ -90,3 +90,4 @@ steps:
     Invoke-RestMethod -Uri $url -Headers $headers -Method Put -Body $body
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  displayName: 'Update version numbers for next run'
