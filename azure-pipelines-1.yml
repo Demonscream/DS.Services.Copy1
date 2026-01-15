@@ -86,7 +86,7 @@ steps:
         "Content-Type" = "application/json"
     }
 
-    $url = "$org$project/_apis/pipelines/$pipelineId/variables?api-version=7.1-preview.1"
+    $url = "$org$project/_apis/build/definitions//$pipelineId/variables?api-version=7.1-preview.1"
 
     Invoke-RestMethod -Uri $url -Method Patch -Headers $headers -Body $body
   env:
